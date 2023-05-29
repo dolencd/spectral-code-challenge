@@ -22,7 +22,6 @@ impl TryFrom<MeterUsageDataPoint> for SensorDataResponse {
     fn try_from(value: MeterUsageDataPoint) -> Result<Self, Self::Error> {
         let input_timestamp = value.time.context("Missing time in data point")?;
 
-        // Create a NaiveDateTime from the Unix timestamp
         let timestamp = NaiveDateTime::from_timestamp_opt(
             input_timestamp.seconds,
             input_timestamp.nanos as u32,
