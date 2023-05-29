@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sensor data</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Spectral code challenge" />
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+
+      td {
+        padding: 0.2em 0.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Sensor data:</h1>
+    <table id="table">
+      <th>Timestamp</th>
+      <th>Value</th>
+    </table>
+  </body>
+  <script>
+    // So little code that it doesn't make sense to use TypeScript.
+    (async () => {
+      const response = await fetch("/api");
+      const sensor_data = await response.json();
+      const table = document.getElementById("table");
+      table.innerHTML += sensor_data
+        .map(
+          ({ time, meterusage }) =>
+            `<tr><td>${time}</td><td>${meterusage}</td></tr>`
+        )
+        .join("\n");
+    })();
+  </script>
+</html>

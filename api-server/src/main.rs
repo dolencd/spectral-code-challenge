@@ -1,15 +1,21 @@
 use std::net::SocketAddr;
 mod dataclient;
 
-use axum::{http::StatusCode, response::IntoResponse, routing::get, Router};
+use axum::{
+    http::StatusCode,
+    response::{Html, IntoResponse},
+    routing::get,
+    Router,
+};
 use dataclient::fetch_sensor_data;
 use serde::{Deserialize, Serialize};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let app = Router::new().route("/", get(handler));
+    let app = Router::new()
+        .route("/api", get(handler))
+        .route("/", get(serve_frontend));
 
-    // run it
     let address = SocketAddr::from(([127, 0, 0, 1], 3000));
     println!("listening on {}", address);
     axum::Server::bind(&address)
@@ -23,6 +29,10 @@ async fn main() -> anyhow::Result<()> {
 struct SensorDataResponse {
     time: String,
     meterusage: f32,
+}
+
+async fn serve_frontend() -> Html<&'static str> {
+    Html(include_str!("../frontend.html"))
 }
 
 async fn handler() -> impl IntoResponse {
