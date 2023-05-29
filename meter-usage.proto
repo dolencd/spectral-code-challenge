@@ -1,0 +1,20 @@
+syntax = "proto3";
+package meter_usage;
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service MeterUsageService {
+    rpc GetSensorData (google.protobuf.Empty) returns (MeterUsage);
+}
+
+message EmptyRequest {}
+
+message MeterUsage {
+    repeated MeterUsageDataPoint meter_usage = 1;
+}
+
+message MeterUsageDataPoint {
+    float value = 1;
+    google.protobuf.Timestamp time = 2;
+}
+
