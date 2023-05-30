@@ -1,11 +1,8 @@
 use meter::meter_usage_service_server::MeterUsageService;
 use meter::MeterUsage;
-use prost_types::Timestamp;
 use tonic::{Request, Response, Status};
 
-use crate::reader::{read_csv_sensor_data, DataPoint};
-
-use self::meter::MeterUsageDataPoint;
+use crate::reader::{read_csv_sensor_data};
 
 pub mod meter {
     tonic::include_proto!("meter_usage");
@@ -31,17 +28,5 @@ impl MeterUsageService for Meter {
         };
 
         Ok(Response::new(reply))
-    }
-}
-
-impl Into<MeterUsageDataPoint> for DataPoint {
-    fn into(self) -> MeterUsageDataPoint {
-        MeterUsageDataPoint {
-            time: Some(Timestamp {
-                seconds: self.time.timestamp(),
-                nanos: self.time.timestamp_subsec_nanos() as i32,
-            }),
-            value: self.meter_usage,
-        }
     }
 }

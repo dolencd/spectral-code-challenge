@@ -42,6 +42,14 @@ As mentioned in the email, an actual device would stream data (either line by li
 
 With the reading being handled by an async iterator, the next step to do that would be to make response of the gRPC method be a stream of elements or arrays of elements. After that I'd just do the same thing on the HTTP API side as well and update the frontend to handle this.
 
+### Proper gRPC client code
+
+Right now the function that fetches data via gRPC creates a new client whenever it's called. Ideally it'd be created on startup and then reused for every request being processed. Axum (the HTTP framework) has some features for sharing data like this, but the client might not fit the requirements for it. Still, something to improve that I hope to take a look at in the near future.
+
+### Layering
+
+Normally I'd like to have a clear separation between what happens at the core of a "service" and what happens around the edges (endpoint, api clients, ...). I could have done it here too, but it'd require many more internal types and conversions and general work to implement. It also doesn't bring much value in this case due to the size of the project.
+
 ## Deployment
 
 Recently I've found [Shuttle](https://www.shuttle.rs/) which takes an interesting approach to IaC and I wanted to try it out. Something for next weekend.

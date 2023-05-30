@@ -14,6 +14,7 @@ use serde::{Deserialize, Serialize};
 async fn main() -> anyhow::Result<()> {
     let app = Router::new()
         .route("/api", get(handler))
+        // Using the same server for the frontend for simplicity.
         .route("/", get(serve_frontend));
 
     let address = SocketAddr::from(([127, 0, 0, 1], 3000));
