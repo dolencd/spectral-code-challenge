@@ -2,7 +2,7 @@ use meter::meter_usage_service_server::MeterUsageService;
 use meter::MeterUsage;
 use tonic::{Request, Response, Status};
 
-use crate::reader::{read_csv_sensor_data};
+use crate::reader::read_csv_sensor_data;
 
 pub mod meter {
     tonic::include_proto!("meter_usage");
@@ -18,11 +18,6 @@ impl MeterUsageService for Meter {
 
         let reply = MeterUsage {
             meter_usage: read_csv_sensor_data()
-                .map_err(|err| {
-                    eprintln!("Failed to read sensor data {:?}", err);
-                    Status::internal("Failed to read sensor data")
-                })?
-                .into_iter()
                 .map(|data_point| data_point.into())
                 .collect(),
         };

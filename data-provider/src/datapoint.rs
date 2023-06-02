@@ -1,5 +1,4 @@
 use chrono::NaiveDateTime;
-use csv::StringRecord;
 use prost_types::Timestamp;
 
 use crate::meter::meter::MeterUsageDataPoint;
@@ -8,17 +7,6 @@ use crate::meter::meter::MeterUsageDataPoint;
 pub struct DataPoint {
     pub time: NaiveDateTime,
     pub meter_usage: f32,
-}
-
-impl TryFrom<StringRecord> for DataPoint {
-    type Error = anyhow::Error;
-    fn try_from(value: StringRecord) -> std::result::Result<Self, Self::Error> {
-        Ok(DataPoint {
-            // NaiveDateTime just means that it doesn't have a timezone
-            time: NaiveDateTime::parse_from_str(&value[0], "%Y-%m-%d %H:%M:%S")?,
-            meter_usage: value[1].parse()?,
-        })
-    }
 }
 
 impl Into<MeterUsageDataPoint> for DataPoint {
@@ -30,5 +18,11 @@ impl Into<MeterUsageDataPoint> for DataPoint {
             }),
             value: self.meter_usage,
         }
+    }
+}
+
+impl PartialEq for DataPoint {
+    fn eq(&self, other: &Self) -> bool {
+        self.meter_usage == other.meter_usage && self.time == other.time
     }
 }
